@@ -12,9 +12,21 @@ public abstract class PageObject<T extends PageObject> {
     public static PageObject page = null;
     public static WebElement element = null;
 
-    public static <T extends PageObject> T load(Class<T> c) throws IllegalAccessException, InstantiationException {
-        page = c.newInstance();
+    public static <T extends PageObject> T load(Class<T> c) {
+        try {
+            page = c.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
         return (T) page;
+    }
+
+    public <T extends PageObject> T returns(Class<T> t) {
+        return load(t);
+    }
+
+    public <T> T output(T t) {
+        return t;
     }
 
     public WebElement locate(By by) {

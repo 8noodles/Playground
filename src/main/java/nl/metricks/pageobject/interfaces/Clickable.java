@@ -3,10 +3,10 @@ package nl.metricks.pageobject.interfaces;
 import nl.metricks.pageobject.PageObject;
 
 @FunctionalInterface
-public interface Clickable<T extends PageObject> extends IWebElement<T> {
+public interface Clickable<T> extends IWebElement {
 
-    default Clickable<T> click() {
+    default T click() {
         find().click();
-        return this;
+        return (T) PageObject.page;
     }
 }

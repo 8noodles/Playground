@@ -3,10 +3,10 @@ package nl.metricks.pageobject.interfaces;
 import nl.metricks.pageobject.PageObject;
 
 @FunctionalInterface
-public interface Writable<T extends PageObject> extends IWebElement<T> {
+public interface Writable<T> extends IWebElement<T> {
 
-    default Writable<T> write(String s) {
+    default T write(String s) {
         find().sendKeys(s);
-        return this;
+        return (T) PageObject.page;
     }
 }

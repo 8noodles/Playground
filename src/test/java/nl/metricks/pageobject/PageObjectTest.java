@@ -1,11 +1,14 @@
 package nl.metricks.pageobject;
 
-import nl.metricks.pageobject.pageobjects.GegevensAansprakelijkheidPageObject;
-import nl.metricks.pageobject.pageobjects.OverigPageObject;
-import nl.metricks.pageobject.pageobjects.WelkomPageObject;
+import nl.metricks.pageobject.interfaces.Scenario;
+import nl.metricks.pageobject.pageobjects.CheckboxesPageObject;
+import nl.metricks.pageobject.pageobjects.DropdownPageObject;
+import nl.metricks.pageobject.pageobjects.ExamplesPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.BeforeClass;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.function.Predicate;
@@ -15,30 +18,42 @@ import static nl.metricks.pageobject.PageObject.load;
 
 public class PageObjectTest {
     private WebDriver driver;
+    Scenario<String> checkboxes, dropdown;
 
     Predicate<String> title = s -> driver.getTitle().equals(s);
+    Predicate<WebElement> selected = WebElement::isSelected;
 
-    @BeforeClass
+
+    @BeforeTest
     public void setUp() {
-        driver = PageObject.driver = new FirefoxDriver();
-        driver.navigate().to("http://www.zlm.nl");
+        driver = PageObject.driver = new HtmlUnitDriver();
+    }
+
+    @BeforeMethod
+    public void navigateToPage() {
+        driver.navigate().to("http://the-internet.herokuapp.com/");
     }
 
     @Test
-    public void executeScenario() throws InstantiationException, IllegalAccessException {
-        load(WelkomPageObject.class)
-            .test(title.test("U tevreden, wij tevreden | ZLM Verzekeringen"))
-            .overig.click()
+    public void checkboxesTest() throws InstantiationException, IllegalAccessException {
+        checkboxes = () ->
+                load(ExamplesPage.class).test(title.test("The Internet"))
+                        .checkboxes.click().returns(CheckboxesPageObject.class)
+                        .checkbox1.click().test(selected.test(element))
+                        .checkbox2.click().test(!selected.test(element))
+                        .output("Success!");
 
-            .returns(OverigPageObject.class)
-                .aansprakelijkheid.click()
+        System.out.println("checkboxesTest: " + checkboxes.execute());
+    }
 
-            .returns(GegevensAansprakelijkheidPageObject.class)
-                .test(title.test("Premieberekening aansprakelijkheid | ZLM Verzekeringen"))
-                .postcodeletters.write("XH")
-                .and().postcodecijfers.write("4463")
-                .and().alleenwonend.click()
-                .and().test(element.isSelected())
-                .berekenen.click();
+    @Test
+    public void dropdownListTest() throws InstantiationException, IllegalAccessException {
+        dropdown = () ->
+                load(ExamplesPage.class).test(title.test("The Internet"))
+                        .dropdown.click().returns(DropdownPageObject.class)
+                        .dropdown.select("Option 1")
+                        .output("Success!");
+
+        System.out.println("dropdownListTest: " + dropdown.execute());
     }
 }
