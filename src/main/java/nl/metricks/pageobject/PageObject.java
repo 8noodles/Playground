@@ -1,32 +1,28 @@
 package nl.metricks.pageobject;
 
-import nl.metricks.pageobject.elements.Returnable;
-import nl.metricks.pageobject.pageobjects.WelkomPageObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static junit.framework.Assert.assertTrue;
 
-public abstract class PageObject<T extends PageObject> implements Returnable {
+public abstract class PageObject<T extends PageObject> {
 
     public static WebDriver driver;
-    private static PageObject currentPage = new WelkomPageObject();
+    public static PageObject page = null;
+    public static WebElement element = null;
 
-    public static PageObject getCurrentPage() {
-        return currentPage;
+    public static <T extends PageObject> T load(Class<T> c) throws IllegalAccessException, InstantiationException {
+        page = c.newInstance();
+        return (T) page;
     }
 
-    public static void setCurrentPage(PageObject currentPage) {
-        PageObject.currentPage = currentPage;
+    public WebElement locate(By by) {
+        return element = driver.findElement(by);
     }
 
-    public WebElement xpath(String xpath) {
-        return driver.findElement(By.xpath(xpath));
-    }
-
-    public T test(boolean result) {
-        assertThat(result).isTrue();
-        return (T) currentPage;
+    public T test(boolean expectation) {
+        assertTrue(expectation);
+        return (T) page;
     }
 }

@@ -10,8 +10,12 @@ import org.testng.annotations.Test;
 
 import java.util.function.Predicate;
 
+import static nl.metricks.pageobject.PageObject.element;
+import static nl.metricks.pageobject.PageObject.load;
+
 public class PageObjectTest {
     private WebDriver driver;
+
     Predicate<String> title = s -> driver.getTitle().equals(s);
 
     @BeforeClass
@@ -21,19 +25,20 @@ public class PageObjectTest {
     }
 
     @Test
-    public void executeScenario() {
-        new WelkomPageObject()
+    public void executeScenario() throws InstantiationException, IllegalAccessException {
+        load(WelkomPageObject.class)
             .test(title.test("U tevreden, wij tevreden | ZLM Verzekeringen"))
             .overig.click()
 
-            .returns(new OverigPageObject())
+            .returns(OverigPageObject.class)
                 .aansprakelijkheid.click()
 
-            .returns(new GegevensAansprakelijkheidPageObject())
+            .returns(GegevensAansprakelijkheidPageObject.class)
                 .test(title.test("Premieberekening aansprakelijkheid | ZLM Verzekeringen"))
                 .postcodeletters.write("XH")
                 .and().postcodecijfers.write("4463")
                 .and().alleenwonend.click()
-                .and().berekenen.click();
+                .and().test(element.isSelected())
+                .berekenen.click();
     }
 }

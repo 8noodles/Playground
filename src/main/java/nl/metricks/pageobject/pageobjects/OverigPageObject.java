@@ -1,7 +1,8 @@
 package nl.metricks.pageobject.pageobjects;
 
 import nl.metricks.pageobject.PageObject;
-import nl.metricks.pageobject.elements.Clickable;
+import nl.metricks.pageobject.interfaces.Clickable;
+import org.openqa.selenium.By;
 
 public class OverigPageObject extends PageObject<OverigPageObject> {
 
@@ -9,6 +10,6 @@ public class OverigPageObject extends PageObject<OverigPageObject> {
             gezinsongevallen, reis, annulering;
 
     {
-        aansprakelijkheid = () -> xpath(".//a[text()='Aansprakelijkheid']");
+        aansprakelijkheid = () -> locate(By.xpath(".//a[text()='Aansprakelijkheid']"));
     }
 }
