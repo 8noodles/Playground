@@ -1,6 +1,9 @@
 package nl.metricks.pageobject.elements;
 
-public interface Clickable<T> extends IWebElement<T>, Returnable<T> {
+import nl.metricks.pageobject.PageObject;
+
+public interface Clickable<T extends PageObject>
+        extends IWebElement, Returnable<T> {
 
     default Clickable<T> click() {
         find().click();

@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.function.Predicate;
 
-public class Premieberekening {
+public class PageObjectTest {
     private WebDriver driver;
     Predicate<String> title = s -> driver.getTitle().equals(s);
 
@@ -23,18 +23,17 @@ public class Premieberekening {
     @Test
     public void executeScenario() {
         new WelkomPageObject()
-                .test(title.test("U tevreden, wij tevreden | ZLM Verzekeringen"))
-                .overig.click()
+            .test(title.test("U tevreden, wij tevreden | ZLM Verzekeringen"))
+            .overig.click()
 
-                .returns(new OverigPageObject())
+            .returns(new OverigPageObject())
                 .aansprakelijkheid.click()
 
-                .returns(new GegevensAansprakelijkheidPageObject())
+            .returns(new GegevensAansprakelijkheidPageObject())
                 .test(title.test("Premieberekening aansprakelijkheid | ZLM Verzekeringen"))
                 .postcodeletters.write("XH")
                 .and().postcodecijfers.write("4463")
                 .and().alleenwonend.click()
                 .and().berekenen.click();
-
     }
 }

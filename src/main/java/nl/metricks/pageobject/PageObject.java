@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public abstract class PageObject<T> implements Returnable {
+public abstract class PageObject<T extends PageObject> implements Returnable {
 
     public static WebDriver driver;
     private static PageObject currentPage = new WelkomPageObject();
